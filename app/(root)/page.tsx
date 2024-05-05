@@ -1,9 +1,9 @@
 import HeaderBox from '@/components/HeaderBox'
 import TotalBalanceBox from '@/components/TotalBalanceBox'
+import { loggedIn } from '@/constants'
 import React from 'react'
 
 const Home = () => {
-  const loggedIn = {firstName: 'Israel'}
   return (
     <section className={`home`} >
       <div className="home-content">

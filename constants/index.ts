@@ -20,7 +20,8 @@ export const sidebarLinks = [
       label: "Transfer Funds",
     },
   ];
-  
+  export const APP_NAME = 'Horizon'
+  export const loggedIn = {$id: 1, firstName: 'Israel', lastName: 'Iloba'}
   export const TEST_USER_ID = "6627ed3d00267aa6fa3e";
   
   export const TEST_ACCESS_TOKEN =
