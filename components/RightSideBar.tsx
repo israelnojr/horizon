@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import BankCard from './BankCard'
+import { RightSidebarProps } from '@/types'
 
 const RightSideBar = ({user, transactions, banks}: RightSidebarProps) => {
   return (

@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 
+import { authFormSchema } from "@/lib/utils";
+import { Control, FieldPath } from "react-hook-form";
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -178,6 +181,14 @@ declare interface PlaidLinkProps {
   user: User;
   variant?: "primary" | "ghost";
   dwollaCustomerId?: string;
+}
+
+declare interface CustomInputProps{
+  control: Control<z.infer<typeof authFormSchema>>,
+  name: FieldPath<z.infer<typeof authFormSchema>>,
+  label: string,
+  placeholder: string
+  type: string
 }
 
 // declare type User = sdk.Models.Document & {
