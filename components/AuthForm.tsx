@@ -11,11 +11,17 @@ import { Form } from "@/components/ui/form"
 import CustomInput from "./CustomInput"
 import { authFormSchema } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
+import { redirect, useRouter } from "next/navigation"
+import { signUp, signIn } from "@/lib/actions/user.actions"
+import { SignUpParams } from "@/types"
+import { exit } from "process"
 
 const AuthForm = ({type}: {type: string}) => {
+    const router = useRouter()
     const [user, setUser] = useState(null)
     const [isLoading, setisLoading] = useState(false)
-
+    const [error, setError] = useState('');
+    const [token, setToken] = useState('');
     const authformSchema = authFormSchema(type)
     const form = useForm<z.infer<typeof authformSchema>>
     ({
@@ -26,13 +32,39 @@ const AuthForm = ({type}: {type: string}) => {
         },
     })
     
-    function onSubmit(values: z.infer<typeof authformSchema>) {
+    const onSubmit = async (data: z.infer<typeof authformSchema>) => {
         setisLoading(true)
-        console.log(values)
-        setisLoading(false)
+        try{
+            if(type === 'sign-up') {
+                const res = await signUp(data);
+                if(res) {
+                   router.push("/sign-in")
+                } else {
+                    setError('Invalid email or password');
+                }
+            }
+
+            if(type === 'sign-in') {
+                const cookie = await signIn({
+                    email: data.email,
+                    password: data.password
+                })
+                if(cookie) {
+                   redirect('/user/dashboard')
+                } else {
+                    setError('Invalid email or password');
+                }
+                   
+            }
+
+        }catch(error) {
+            console.log(error)
+        }finally{
+            setisLoading(false)
+        }
     }
   return (
-    <section className='auth-form m-5' >
+    <section className='auth-form' >
         <header className='flex flex-col gap-5 md:gap-8 ' >
             <Link href={"/"} className="cursor-pointer flex items-center gap-1">
                 <Image
@@ -78,21 +110,11 @@ const AuthForm = ({type}: {type: string}) => {
                                 </div>
                             </>
                         )}
-                        <CustomInput 
-                            control={form.control}
-                            name={"email"}
-                            label={"Email"}
-                            placeholder={"Enter your email"}
-                            type={"email"}
-                        />
+                        <CustomInput control={form.control} name={"email"} label={"Email"} placeholder={"Enter your email"} type={"email"}/>
 
-                        <CustomInput 
-                            control={form.control}
-                            name={"password"}
-                            label={"Password"}
-                            placeholder={"Enter your password"}
-                            type={"password"}
-                        />
+                        <CustomInput control={form.control} name={"password"} label={" Password"} placeholder={"Enter your password"} type={"password"} />
+                        {type === 'sign-up' && ( <CustomInput control={form.control} name={"password_confirmation"} label={"Confirm Password"} placeholder={"Enter your password again"} type={"password"} /> )}
+                        
                         <div className="flex flex-col gap-4">
                             <Button className="form-btn" disabled={isLoading} type="submit">
                                 {
@@ -122,3 +144,4 @@ const AuthForm = ({type}: {type: string}) => {
 }
 
 export default AuthForm
+

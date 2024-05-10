@@ -1,22 +1,22 @@
 export const sidebarLinks = [
     {
       imgURL: "/icons/home.svg",
-      route: "/",
-      label: "Home",
+      route: "/user/dashboard",
+      label: "Dashboard",
     },
     {
       imgURL: "/icons/dollar-circle.svg",
-      route: "/my-banks",
+      route: "/user/my-banks",
       label: "My Banks",
     },
     {
       imgURL: "/icons/transaction.svg",
-      route: "/transaction-history",
+      route: "/user/transaction-history",
       label: "Transaction History",
     },
     {
       imgURL: "/icons/money-send.svg",
-      route: "/payment-transfer",
+      route: "/user/payment-transfer",
       label: "Transfer Funds",
     },
   ];
@@ -44,6 +44,7 @@ export const sidebarLinks = [
     },
   ];
   
+  export const COOKIE_NAME = 'Authorization'
   export const topCategoryStyles = {
     "Food and Drink": {
       bg: "bg-blue-25",
