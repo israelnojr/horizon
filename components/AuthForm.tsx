@@ -132,10 +132,14 @@ const AuthForm = ({type}: {type: string}) => {
                     </form>
                 </Form>
                 <footer className="flex justify-center gap-1">
-                    <p>
-                        {type === 'sign-in' ? (<Link href={"/sign-up"}>Don't have an account ?</Link>) : 
-                        <Link href={"/sign-in"}>Already have an account ?</Link>}
+                    <p className="text-14 font-normal text-gray-600">
+                        {type === 'sign-in'
+                        ? "Don't have an account?"
+                        : "Already have an account?"}
                     </p>
+                    <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="form-link">
+                    {type === 'sign-in' ? 'Sign up' : 'Sign in'}
+                    </Link>
                 </footer>
             </>
         )}
