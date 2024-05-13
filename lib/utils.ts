@@ -1,4 +1,5 @@
 /* eslint-disable no-prototype-builtins */
+import { ssnRegex } from "@/constants";
 import { AccountTypes, CategoryCount, CategoryCount, Transaction } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
@@ -7,6 +8,19 @@ import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function capitalizeFirstTwoLetters(inputString: string) {
+  if (typeof inputString !== 'string' || inputString.length === 0) {
+    return 'Must be type of string'; // Return empty string if input is not a string or empty
+  }
+
+  // Extract the first two letters
+  const firstTwoLetters = inputString.slice(0, 2);
+
+  const capitalizedLetters = firstTwoLetters.toUpperCase();
+
+  return capitalizedLetters;
 }
 
 // FORMAT DATE TIME
@@ -211,3 +225,24 @@ export const authFormSchema = (type: string) => z.object({
   email: z.string().email(),
   password: z.string().min(8),
 })
+
+export function getValidSSN(ssn: string){
+  const isValid = ssnRegex.test(ssn)
+  if(!isValid) throw new Error("Invalid SSN provided")
+  return ssn
+
+}
+
+export function generateUniqueUserId(baseUserId: string) {
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+
+  // Generate random string of 12 characters
+  for (let i = 0; i < 12; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters[randomIndex];
+  }
+
+  // Append random string to base user ID
+  return `${baseUserId}${randomString}`;
+}

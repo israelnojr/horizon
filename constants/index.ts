@@ -136,5 +136,9 @@ export const sidebarLinks = [
       textColor: "text-blue-700",
       chipBackgroundColor: "bg-inherit",
     },
-  };
+    
+  }
+
+export const ssnRegex = /^\d{3}-\d{2}-\d{4}$/;
+
   

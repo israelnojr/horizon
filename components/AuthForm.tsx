@@ -13,15 +13,14 @@ import { authFormSchema } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 import { redirect, useRouter } from "next/navigation"
 import { signUp, signIn } from "@/lib/actions/user.actions"
-import { SignUpParams } from "@/types"
 import { exit } from "process"
+import PlaidLink from "./PlaidLink"
 
 const AuthForm = ({type}: {type: string}) => {
     const router = useRouter()
     const [user, setUser] = useState(null)
     const [isLoading, setisLoading] = useState(false)
-    const [error, setError] = useState('');
-    const [token, setToken] = useState('');
+    const [error, setError] = useState('')
     const authformSchema = authFormSchema(type)
     const form = useForm<z.infer<typeof authformSchema>>
     ({
@@ -36,9 +35,22 @@ const AuthForm = ({type}: {type: string}) => {
         setisLoading(true)
         try{
             if(type === 'sign-up') {
-                const res = await signUp(data);
-                if(res) {
-                   router.push("/sign-in")
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    address1: data.address1!,
+                    city: data.city!,
+                    state: data.state!,
+                    postalCode: data.postalCode!,
+                    dateOfBirth: data.dateOfBirth!,
+                    ssn: data.ssn!,
+                    email: data.email,
+                    password: data.password,
+                    password_confirmation: data.password_confirmation!
+                }
+                const user = await signUp(userData);
+                if(user) {
+                   setUser(user)
                 } else {
                     setError('Invalid email or password');
                 }
@@ -77,7 +89,7 @@ const AuthForm = ({type}: {type: string}) => {
             </Link>
             <div className="flex flex-col gap-1 md:gap-3">
                 <h1 className="text-24 lg:text-36 font-semibold text-gray-900" >
-                    { user ? "Link Account" : type === 'sign-in' ? 'Sign In' : 'Sign Up' }
+                    {user ? "Link Account" : type === 'sign-in' ? 'Sign In' : 'Sign Up' }
                     <p className="text-16 font-normal text-gray-600">
                         { user ? "Link account to get started" : 'Please enter your details'}
                     </p>
@@ -86,7 +98,7 @@ const AuthForm = ({type}: {type: string}) => {
         </header>
         {user ? (
             <div className="flex flex-col gap-4">
-                Plaid links
+               <PlaidLink user={user} variant="primary" />
             </div>
         ) : (
             <>
@@ -106,14 +118,14 @@ const AuthForm = ({type}: {type: string}) => {
                                 </div>
                                 <div className="flex gap-4">
                                     <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder='YYYY-MM-DD' type={"date"} />
-                                    <CustomInput control={form.control} name='ssn' label="SSN" placeholder='Example: 1234' type={"text"} />
+                                    <CustomInput control={form.control} name='ssn' label="SSN" placeholder='Example: 1234' type={"password"} />
                                 </div>
                             </>
                         )}
                         <CustomInput control={form.control} name={"email"} label={"Email"} placeholder={"Enter your email"} type={"email"}/>
 
                         <CustomInput control={form.control} name={"password"} label={" Password"} placeholder={"Enter your password"} type={"password"} />
-                        {type === 'sign-up' && ( <CustomInput control={form.control} name={"password_confirmation"} label={"Confirm Password"} placeholder={"Enter your password again"} type={"password"} /> )}
+                        {type === 'sign-up' && ( <CustomInput control={form.control} name={"password_confirmation"} label={"Confirm Password"} placeholder={"Enter your password again"} type={"text"} /> )}
                         
                         <div className="flex flex-col gap-4">
                             <Button className="form-btn" disabled={isLoading} type="submit">
@@ -133,9 +145,9 @@ const AuthForm = ({type}: {type: string}) => {
                 </Form>
                 <footer className="flex justify-center gap-1">
                     <p className="text-14 font-normal text-gray-600">
-                        {type === 'sign-in'
-                        ? "Don't have an account?"
-                        : "Already have an account?"}
+                    {type === 'sign-in'
+                    ? "Don't have an account?"
+                    : "Already have an account?"}
                     </p>
                     <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="form-link">
                     {type === 'sign-in' ? 'Sign up' : 'Sign in'}
